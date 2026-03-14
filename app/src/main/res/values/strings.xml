@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">NoteApp</string>
+    <string name="lbl_sign_in">Sing in</string>
+    <string name="lbl_email_input">Enter email</string>
+</resources>
