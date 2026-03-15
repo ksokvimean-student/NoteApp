@@ -1,5 +1,14 @@
 <resources>
     <string name="app_name">NoteApp</string>
-    <string name="lbl_sign_in">Sing in</string>
+    <string name="btn_login">Login</string>
+    <string name="btn_signup">Sign Up</string>
+    <string name="title_create_account">Create Account</string>
+    <string name="lbl_name_input">Enter Full Name</string>
     <string name="lbl_email_input">Enter email</string>
+    <string name="lbl_password_input">Enter Password</string>
+    <string name="lbl_confirm_password_input">Confirm Password</string>
+    <string name="msg_create_new_account">New here? Create an account</string>
+    <string name="msg_already_have_account">Already have an account? Log in</string>"
+
+    <string name="title_note_list">Your Note</string>
 </resources>

@@ -1,8 +1,6 @@
-package com.example.noteapp.models
+package com.example.noteapp.data.database
 
-import java.math.BigInteger
-
-class User {
+class NoteDatabase {
     constructor()
     constructor(id:Int,name: String){
         this.id = id;
