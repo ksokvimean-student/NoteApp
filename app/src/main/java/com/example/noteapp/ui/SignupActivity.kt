@@ -34,10 +34,6 @@ class SignupActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Handles all the UI validation logic.
-     * Returns true if all inputs are valid.
-     */
     private fun validateForm(): Boolean {
         val name = binding.userName.text.toString().trim()
         val email = binding.userEmail.text.toString().trim()
@@ -46,39 +42,22 @@ class SignupActivity : AppCompatActivity() {
 
         var isValid = true
 
-        // Name Check
         if (name.isEmpty()) {
             binding.tilName.error = "Name is required"
             isValid = false
         }
-
-        // Email Check (Empty and Format)
-        if (email.isEmpty()) {
-            binding.tilEmail.error = "Email is required"
-            isValid = false
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            binding.tilEmail.error = "Please enter a valid email address"
+        if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            binding.tilEmail.error = "Valid email is required"
             isValid = false
         }
-
-        // Password Check (Empty and Length)
-        if (password.isEmpty()) {
-            binding.tilPassword.error = "Password is required"
-            isValid = false
-        } else if (password.length < 6) {
+        if (password.length < 6) {
             binding.tilPassword.error = "Password must be at least 6 characters"
             isValid = false
         }
-
-        // Confirm Password Check
-        if (confirmPass.isEmpty()) {
-            binding.tilConfirmPassword.error = "Please confirm your password"
-            isValid = false
-        } else if (password != confirmPass) {
+        if (password != confirmPass) {
             binding.tilConfirmPassword.error = "Passwords do not match"
             isValid = false
         }
-
         return isValid
     }
 
@@ -90,24 +69,20 @@ class SignupActivity : AppCompatActivity() {
         val sharedPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val gson = Gson()
 
-        // Get and check existing users
+        // Load existing list
         val json = sharedPref.getString("user_list", null)
         val type = object : TypeToken<MutableList<User>>() {}.type
         val userList: MutableList<User> = if (json == null) mutableListOf() else gson.fromJson(json, type)
 
+        // Check if email exists
         if (userList.any { it.email.equals(email, ignoreCase = true) }) {
             binding.tilEmail.error = "This email is already registered"
             return
         }
 
-        // Save new user
+        // Add and Save
         userList.add(User(name, email, password))
-        sharedPref.edit().apply {
-            putString("user_list", gson.toJson(userList))
-            putString("saved_email", email)
-            putString("saved_name", name)
-            apply()
-        }
+        sharedPref.edit().putString("user_list", gson.toJson(userList)).apply()
 
         Toast.makeText(this, "Account Created!", Toast.LENGTH_SHORT).show()
 
