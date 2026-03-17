@@ -20,14 +20,14 @@ class MainActivity : AppCompatActivity() {
 
         // Static Data Source
         val noteList = listOf(
-            Note(1, "Shopping List", "Buy milk and bread"),
-            Note(2, "Meeting Notes", "Project discussion at 3 PM"),
-            Note(3, "Study Plan", "Learn Kotlin RecyclerView"),
-            Note(4, "Reminder", "Call my friend tonight")
+            Note(id = 1, title = "Shopping List", content = "Buy milk and bread"),
+            Note(id = 2, title = "Meeting Notes", content = "Project discussion at 3 PM"),
+            Note(id = 3, title = "Study Plan", content = "Learn Kotlin RecyclerView"),
+            Note(id = 4, title = "Reminder", content = "Call my friend tonight")
         )
 
         // RecyclerView setup
-        adapter = NoteAdapter(noteList)
+//        adapter = NoteAdapter(noteList)
 
         binding.recyclerNotes.layoutManager = LinearLayoutManager(this)
         binding.recyclerNotes.adapter = adapter

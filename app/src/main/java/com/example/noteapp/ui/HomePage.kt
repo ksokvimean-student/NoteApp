@@ -2,31 +2,128 @@ package com.example.noteapp.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.noteapp.R
+import com.example.noteapp.adapter.NoteAdapter
+import com.example.noteapp.data.database.NoteDao
+import com.example.noteapp.data.database.SettingsManager
 import com.example.noteapp.databinding.ActivityHomeBinding
 import com.example.noteapp.databinding.UserProfileBinding
+import com.example.noteapp.model.Note
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
 class HomePage : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
+    private lateinit var noteDao: NoteDao
+    private lateinit var noteAdapter: NoteAdapter
+    private lateinit var settingsManager: SettingsManager
 
-    // Variables to hold the data coming from Signup
     private var name: String? = ""
     private var email: String? = ""
+    private var userId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 1. Retrieve the data from the Intent
+        userId = intent.getIntExtra("USER_ID", 0)
         name = intent.getStringExtra("USER_NAME")
         email = intent.getStringExtra("USER_EMAIL")
 
+        noteDao = NoteDao(this)
+        settingsManager = SettingsManager(this)
+
+        setupRecyclerView()
+        setupClickListeners()
+        setupBottomNavigation()
+    }
+
+    private fun setupBottomNavigation() {
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> true
+                R.id.nav_settings -> {
+                    startActivity(Intent(this, SettingsActivity::class.java))
+                    true
+                }
+                else -> false
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadNotes()
+    }
+
+    private fun setupRecyclerView() {
+        noteAdapter = NoteAdapter(
+            notes = emptyList(),
+            onNoteClick = { note ->
+                openUpdateNoteActivity(note.id)
+            },
+            onDeleteClick = { note ->
+                showDeleteConfirmation(note)
+            }
+        )
+
+        binding.rvNotes.apply {
+            layoutManager = LinearLayoutManager(this@HomePage)
+            adapter = noteAdapter
+        }
+    }
+
+    private fun setupClickListeners() {
         binding.ivUserProfile.setOnClickListener {
             showUserProfileSheet()
         }
+
+        binding.fabAddNote.setOnClickListener {
+            openUpdateNoteActivity(null)
+        }
+    }
+
+    private fun loadNotes() {
+        val notes = noteDao.getAllByUser(userId)
+        noteAdapter.updateNotes(notes)
+
+        binding.tvEmpty.visibility = if (notes.isEmpty()) View.VISIBLE else View.GONE
+        binding.rvNotes.visibility = if (notes.isEmpty()) View.GONE else View.VISIBLE
+    }
+
+    private fun openUpdateNoteActivity(noteId: Int?) {
+        val intent = Intent(this, UpdateNoteActivity::class.java).apply {
+            putExtra("USER_ID", userId)
+            noteId?.let { putExtra("NOTE_ID", it) }
+        }
+        startActivity(intent)
+    }
+
+    private fun showDeleteConfirmation(note: Note) {
+        if (!settingsManager.isConfirmDeleteEnabled) {
+            noteDao.delete(note)
+            loadNotes()
+            return
+        }
+
+        val dialog = BottomSheetDialog(this)
+        val sheetBinding = UserProfileBinding.inflate(layoutInflater)
+        dialog.setContentView(sheetBinding.root)
+
+        sheetBinding.tvSheetName.text = "Delete Note?"
+        sheetBinding.tvSheetEmail.text = "Are you sure you want to delete \"${note.title}\"?"
+        sheetBinding.btnLogout.text = "Delete"
+        sheetBinding.btnLogout.setOnClickListener {
+            noteDao.delete(note)
+            loadNotes()
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     private fun showUserProfileSheet() {
@@ -34,9 +131,9 @@ class HomePage : AppCompatActivity() {
         val sheetBinding = UserProfileBinding.inflate(layoutInflater)
         dialog.setContentView(sheetBinding.root)
 
-        // 2. Display the real user data in the Bottom Sheet
         sheetBinding.tvSheetName.text = if (name.isNullOrEmpty()) "User" else name
         sheetBinding.tvSheetEmail.text = if (email.isNullOrEmpty()) "No Email" else email
+        sheetBinding.btnLogout.text = "Logout"
 
         sheetBinding.btnLogout.setOnClickListener {
             dialog.dismiss()

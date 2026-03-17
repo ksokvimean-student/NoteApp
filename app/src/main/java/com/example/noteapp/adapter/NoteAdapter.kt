@@ -7,7 +7,9 @@ import com.example.noteapp.databinding.ItemNoteBinding
 import com.example.noteapp.model.Note
 
 class NoteAdapter(
-    private val notes: List<Note>
+    private var notes: List<Note>,
+    private val onNoteClick: (Note) -> Unit,
+    private val onDeleteClick: (Note) -> Unit
 ) : RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
 
     class NoteViewHolder(val binding: ItemNoteBinding) :
@@ -30,9 +32,22 @@ class NoteAdapter(
 
         holder.binding.tvTitle.text = note.title
         holder.binding.tvContent.text = note.content
+
+        holder.binding.root.setOnClickListener {
+            onNoteClick(note)
+        }
+
+        holder.binding.btnDelete.setOnClickListener {
+            onDeleteClick(note)
+        }
     }
 
     override fun getItemCount(): Int {
         return notes.size
+    }
+
+    fun updateNotes(newNotes: List<Note>) {
+        notes = newNotes
+        notifyDataSetChanged()
     }
 }

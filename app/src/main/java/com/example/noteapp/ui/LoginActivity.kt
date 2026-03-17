@@ -56,6 +56,7 @@ class LoginActivity : AppCompatActivity() {
 
         if (user != null) {
             val intent = Intent(this, HomePage::class.java).apply {
+                putExtra("USER_ID", user.id)
                 putExtra("USER_NAME", user.name)
                 putExtra("USER_EMAIL", email)
             }

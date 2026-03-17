@@ -17,6 +17,14 @@
             android:exported="false" />
 
         <activity
+            android:name=".ui.SettingsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.UpdateNoteActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".ui.SignupActivity"
             android:exported="false" />
 

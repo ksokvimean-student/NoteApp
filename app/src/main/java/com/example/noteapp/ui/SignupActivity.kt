@@ -81,12 +81,14 @@ class SignupActivity : AppCompatActivity() {
         }
 
         // Add and Save
-        userList.add(User(name, email, password))
+        val userId = System.currentTimeMillis().toInt()
+        userList.add(User(userId, name, email, password))
         sharedPref.edit().putString("user_list", gson.toJson(userList)).apply()
 
         Toast.makeText(this, "Account Created!", Toast.LENGTH_SHORT).show()
 
         startActivity(Intent(this, HomePage::class.java).apply {
+            putExtra("USER_ID", userId)
             putExtra("USER_NAME", name)
             putExtra("USER_EMAIL", email)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
