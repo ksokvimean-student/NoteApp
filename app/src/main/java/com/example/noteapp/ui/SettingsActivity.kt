@@ -2,6 +2,7 @@ package com.example.noteapp.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.noteapp.R
 import com.example.noteapp.data.database.SettingsManager
 import com.example.noteapp.databinding.ActivitySettingsBinding
 
@@ -16,15 +17,21 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         settingsManager = SettingsManager(this)
+        // In SettingsActivity.kt
+        binding.bottomNavLayout.bottomNavigation.setupNavigation(this, R.id.nav_settings)
 
         loadSettings()
         setupToolbar()
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.bottomNavLayout.bottomNavigation.selectedItemId = R.id.nav_settings
+    }
+
     private fun loadSettings() {
         binding.switchAutoSave.isChecked = settingsManager.isAutoSaveEnabled
         binding.switchConfirmDelete.isChecked = settingsManager.isConfirmDeleteEnabled
-        binding.tvStoragePath.text = "Internal Storage/${settingsManager.storageFolder}"
 
         binding.switchAutoSave.setOnCheckedChangeListener { _, isChecked ->
             settingsManager.isAutoSaveEnabled = isChecked

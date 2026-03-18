@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.noteapp.R
 import com.example.noteapp.adapter.NoteAdapter
@@ -37,27 +38,39 @@ class HomeActivity : AppCompatActivity() {
 
         noteDao = NoteDao(this)
         settingsManager = SettingsManager(this)
+        binding.bottomNavLayout.bottomNavigation.setupNavigation(this, R.id.nav_home)
 
         setupRecyclerView()
         setupClickListeners()
-        setupBottomNavigation()
+        setupSearch()
     }
+    private fun setupSearch() {
+        binding.etSearch.addTextChangedListener { text ->
+            val query = text?.toString() ?: ""
 
-    private fun setupBottomNavigation() {
-        binding.bottomNavigation.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_home -> true
-                R.id.nav_settings -> {
-                    startActivity(Intent(this, SettingsActivity::class.java))
-                    true
-                }
-                else -> false
+            val count = noteAdapter.filter(query)
+
+            if (query.isNotEmpty() && count == 0) {
+                // Searching but nothing found
+                binding.tvNoResults.visibility = View.VISIBLE
+                binding.rvNotes.visibility = View.GONE
+            } else if (query.isEmpty() && noteAdapter.itemCount == 0) {
+                // Not searching, but database is empty
+                binding.tvNoResults.visibility = View.GONE
+                binding.tvEmpty.visibility = View.VISIBLE
+                binding.rvNotes.visibility = View.GONE
+            } else {
+                // Results found or search is cleared
+                binding.tvNoResults.visibility = View.GONE
+                binding.tvEmpty.visibility = View.GONE
+                binding.rvNotes.visibility = View.VISIBLE
             }
         }
     }
 
     override fun onResume() {
         super.onResume()
+        binding.bottomNavLayout.bottomNavigation.selectedItemId = R.id.nav_home
         loadNotes()
     }
 
@@ -92,8 +105,16 @@ class HomeActivity : AppCompatActivity() {
         val notes = noteDao.getAllByUser(userId)
         noteAdapter.updateNotes(notes)
 
-        binding.tvEmpty.visibility = if (notes.isEmpty()) View.VISIBLE else View.GONE
-        binding.rvNotes.visibility = if (notes.isEmpty()) View.GONE else View.VISIBLE
+        // Handle Visibility
+        if (notes.isEmpty()) {
+            binding.tvEmpty.visibility = View.VISIBLE
+            binding.rvNotes.visibility = View.GONE
+            binding.tilSearch.visibility = View.GONE // Hide search if no notes exist
+        } else {
+            binding.tvEmpty.visibility = View.GONE
+            binding.rvNotes.visibility = View.VISIBLE
+            binding.tilSearch.visibility = View.VISIBLE // Show search if notes exist
+        }
     }
 
     private fun openUpdateNoteActivity(noteId: Int?) {
@@ -118,6 +139,7 @@ class HomeActivity : AppCompatActivity() {
         sheetBinding.tvSheetName.text = "Delete Note?"
         sheetBinding.tvSheetEmail.text = "Are you sure you want to delete \"${note.title}\"?"
         sheetBinding.btnLogout.text = "Delete"
+
         sheetBinding.btnLogout.setOnClickListener {
             noteDao.delete(note)
             loadNotes()
@@ -137,11 +159,14 @@ class HomeActivity : AppCompatActivity() {
         sheetBinding.btnLogout.text = "Logout"
 
         sheetBinding.btnLogout.setOnClickListener {
+            // Clear Login Session
             val sharedPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
             sharedPref.edit().putBoolean("is_logged_in", false).apply()
 
+            // Navigate to Login
             val intent = Intent(this, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
             dialog.dismiss()
             startActivity(intent)
             finish()

@@ -16,8 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@android:color/white"
-            app:navigationIcon="@drawable/ic_save"
-            app:navigationContentDescription="Save and Back">
+            app:navigationIcon="@drawable/ic_back"
+            app:navigationContentDescription="Back">
 
             <TextView
                 android:id="@+id/tvTitle"
@@ -28,6 +28,34 @@
                 android:textColor="#1A1C1E"
                 android:textSize="18sp"
                 android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:orientation="horizontal"
+                android:paddingEnd="8dp">
+
+                <ImageButton
+                    android:id="@+id/btnDelete"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Delete Note"
+                    android:src="@drawable/ic_delete"
+                    android:visibility="gone"
+                    app:tint="#FF5252" />
+
+                <ImageButton
+                    android:id="@+id/btnSave"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Save Note"
+                    android:src="@drawable/ic_edit"
+                    app:tint="#4CAF50" />
+
+            </LinearLayout>
 
         </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
@@ -44,6 +72,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Title"
+            app:boxStrokeColor="#4CAF50"
+            app:hintTextColor="#4CAF50"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -64,6 +94,8 @@
             android:layout_height="0dp"
             android:layout_marginTop="16dp"
             android:hint="Content"
+            app:boxStrokeColor="#4CAF50"
+            app:hintTextColor="#4CAF50"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

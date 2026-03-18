@@ -9,6 +9,17 @@
     <string name="lbl_confirm_password_input">Confirm Password</string>
     <string name="msg_create_new_account">New here? Create an account</string>
     <string name="msg_already_have_account">Already have an account? Log in</string>"
-
+    <string name="msg_no_note_list">No notes yet. Tap + to create one!</string>
     <string name="title_note_list">Your Note</string>
+    <string name="btn_add_note">Add Note</string>
+    <string name="lbl_search_note">Search notes...</string>
+    <string name="msg_search_not_found">No notes match your search</string>
+    <string name="title_setting">Settings</string>
+    <string name="title_save_setting">Save Settings</string>
+    <string name="title_auto_save">Auto Save</string>
+    <string name="msg_auto_save">Save note when pressing back</string>
+    <string name="title_delete_setting">Delete Settings</string>
+    <string name="title_confirm_delete">Confirm Delete</string>
+    <string name="msg_confirm_delete_setting">Show confirmation before deleting</string>
+
 </resources>

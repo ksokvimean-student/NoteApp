@@ -1,9 +1,11 @@
 package com.example.noteapp.ui
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import com.example.noteapp.R
 import com.example.noteapp.data.database.NoteDao
 import com.example.noteapp.data.database.SettingsManager
 import com.example.noteapp.databinding.ActivityUpdateNoteBinding
@@ -25,28 +27,52 @@ class UpdateNoteActivity : AppCompatActivity() {
         binding = ActivityUpdateNoteBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Init data
         userId = intent.getIntExtra("USER_ID", 0)
-        noteId = intent.getIntExtra("NOTE_ID", -1).takeIf { it != -1 }
+        val idVal = intent.getIntExtra("NOTE_ID", -1)
+        noteId = if (idVal != -1) idVal else null
+        isEditMode = noteId != null
 
         noteDao = NoteDao(this)
         settingsManager = SettingsManager(this)
-
-        isEditMode = noteId != null
 
         if (isEditMode) {
             loadExistingNote()
         }
 
         setupUI()
-        setupToolbar()
+        setupClickListeners()
         setupBackPressHandler()
     }
 
-    private fun setupToolbar() {
+    private fun setupUI() {
+        if (isEditMode) {
+            binding.tvTitle.text = "Edit Note"
+            binding.btnSave.setImageResource(R.drawable.ic_edit) // Floppy icon
+            binding.btnDelete.visibility = View.VISIBLE
+        } else {
+            binding.tvTitle.text = "New Note"
+            binding.btnSave.setImageResource(R.drawable.ic_add) // Checkmark icon
+            binding.btnDelete.visibility = View.GONE
+        }
+    }
+
+    private fun setupClickListeners() {
+        // Back Icon (Left)
         binding.topAppBar.setNavigationOnClickListener {
-            if (settingsManager.isAutoSaveEnabled) {
-                saveNote()
-            } else {
+            handleExit()
+        }
+
+        // Save Icon (Right)
+        binding.btnSave.setOnClickListener {
+            saveNote()
+        }
+
+        // Delete Icon (Right)
+        binding.btnDelete.setOnClickListener {
+            existingNote?.let { note ->
+                noteDao.delete(note)
+                Toast.makeText(this, "Note deleted", Toast.LENGTH_SHORT).show()
                 finish()
             }
         }
@@ -55,17 +81,17 @@ class UpdateNoteActivity : AppCompatActivity() {
     private fun setupBackPressHandler() {
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (settingsManager.isAutoSaveEnabled) {
-                    saveNote()
-                } else {
-                    finish()
-                }
+                handleExit()
             }
         })
     }
 
-    private fun setupUI() {
-        binding.tvTitle.text = if (isEditMode) "Edit Note" else "New Note"
+    private fun handleExit() {
+        if (settingsManager.isAutoSaveEnabled) {
+            saveNote(silent = true)
+        } else {
+            finish()
+        }
     }
 
     private fun loadExistingNote() {
@@ -78,34 +104,25 @@ class UpdateNoteActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveNote() {
+    private fun saveNote(silent: Boolean = false) {
         val title = binding.etTitle.text.toString().trim()
         val content = binding.etContent.text.toString().trim()
 
         if (title.isEmpty()) {
-            binding.tilTitle.error = "Title is required"
+            if (!silent) binding.tilTitle.error = "Title is required"
+            else finish()
             return
         }
 
-        binding.tilTitle.error = null
-
         if (isEditMode && existingNote != null) {
-            val updatedNote = existingNote!!.copy(
-                title = title,
-                content = content
-            )
+            val updatedNote = existingNote!!.copy(title = title, content = content)
             noteDao.update(updatedNote)
-            Toast.makeText(this, "Note updated!", Toast.LENGTH_SHORT).show()
+            if (!silent) Toast.makeText(this, "Note updated!", Toast.LENGTH_SHORT).show()
         } else {
-            val newNote = Note(
-                userId = userId,
-                title = title,
-                content = content
-            )
+            val newNote = Note(userId = userId, title = title, content = content)
             noteDao.insert(newNote)
-            Toast.makeText(this, "Note saved!", Toast.LENGTH_SHORT).show()
+            if (!silent) Toast.makeText(this, "Note saved!", Toast.LENGTH_SHORT).show()
         }
-
         finish()
     }
 }

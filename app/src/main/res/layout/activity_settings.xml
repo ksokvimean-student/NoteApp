@@ -15,18 +15,14 @@
             android:id="@+id/topAppBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@android:color/white"
-            app:navigationIcon="@drawable/ic_back"
-            app:navigationContentDescription="Back">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Settings"
-                android:textColor="#1A1C1E"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+            android:background="@android:color/white"> <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/title_setting"
+            android:textColor="#1A1C1E"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
@@ -57,7 +53,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Save Settings"
+                        android:text="@string/title_save_setting"
                         android:textColor="#4CAF50"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -78,14 +74,14 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Auto Save"
+                                android:text="@string/title_auto_save"
                                 android:textColor="#1A1C1E"
                                 android:textSize="16sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Save note when pressing back"
+                                android:text="@string/msg_auto_save"
                                 android:textColor="#74777F"
                                 android:textSize="12sp" />
 
@@ -117,48 +113,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Storage"
-                        android:textColor="#4CAF50"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:text="Storage Location"
-                        android:textColor="#1A1C1E"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/tvStoragePath"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Internal Storage"
-                        android:textColor="#74777F"
-                        android:textSize="12sp" />
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="2dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Delete Settings"
+                        android:text="@string/title_delete_setting"
                         android:textColor="#4CAF50"
                         android:textSize="14sp"
                         android:textStyle="bold" />
@@ -179,14 +134,14 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Confirm Delete"
+                                android:text="@string/title_confirm_delete"
                                 android:textColor="#1A1C1E"
                                 android:textSize="16sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Show confirmation before deleting"
+                                android:text="@string/msg_confirm_delete_setting"
                                 android:textColor="#74777F"
                                 android:textSize="12sp" />
 
@@ -204,5 +159,8 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+    <include
+        android:id="@+id/bottomNavLayout"
+        layout="@layout/app_navigator" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
