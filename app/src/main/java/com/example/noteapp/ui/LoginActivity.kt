@@ -37,7 +37,6 @@ class LoginActivity : AppCompatActivity() {
         val sharedPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
         val gson = Gson()
 
-        // Get the list of all registered users
         val json = sharedPref.getString("user_list", null)
         val type = object : TypeToken<MutableList<User>>() {}.type
         val userList: MutableList<User> = if (json == null) mutableListOf() else gson.fromJson(json, type)
@@ -51,11 +50,18 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        // Find the list for a match
         val user = userList.find { it.email.equals(email, ignoreCase = true) && it.password == password }
 
         if (user != null) {
-            val intent = Intent(this, HomePage::class.java).apply {
+            //SAVE THE SESSION
+            val editor = sharedPref.edit()
+            editor.putBoolean("is_logged_in", true)
+            editor.putInt("current_user_id", user.id)
+            editor.putString("current_user_name", user.name)
+            editor.putString("current_user_email", email)
+            editor.apply()
+
+            val intent = Intent(this, HomeActivity::class.java).apply {
                 putExtra("USER_ID", user.id)
                 putExtra("USER_NAME", user.name)
                 putExtra("USER_EMAIL", email)

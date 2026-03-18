@@ -80,19 +80,30 @@ class SignupActivity : AppCompatActivity() {
             return
         }
 
-        // Add and Save
+        // Create and Save the user to the master list
         val userId = System.currentTimeMillis().toInt()
         userList.add(User(userId, name, email, password))
-        sharedPref.edit().putString("user_list", gson.toJson(userList)).apply()
+
+        val editor = sharedPref.edit()
+        editor.putString("user_list", gson.toJson(userList))
+
+        // Save current session
+        editor.putBoolean("is_logged_in", true)
+        editor.putInt("current_user_id", userId)
+        editor.putString("current_user_name", name)
+        editor.putString("current_user_email", email)
+        editor.apply()
 
         Toast.makeText(this, "Account Created!", Toast.LENGTH_SHORT).show()
 
-        startActivity(Intent(this, HomePage::class.java).apply {
+        // Navigate to HomePage
+        val intent = Intent(this, HomeActivity::class.java).apply {
             putExtra("USER_ID", userId)
             putExtra("USER_NAME", name)
             putExtra("USER_EMAIL", email)
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        })
+        }
+        startActivity(intent)
         finish()
     }
 

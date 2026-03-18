@@ -1,5 +1,6 @@
 package com.example.noteapp.ui
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -14,7 +15,7 @@ import com.example.noteapp.databinding.UserProfileBinding
 import com.example.noteapp.model.Note
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
-class HomePage : AppCompatActivity() {
+class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var noteDao: NoteDao
@@ -72,7 +73,7 @@ class HomePage : AppCompatActivity() {
         )
 
         binding.rvNotes.apply {
-            layoutManager = LinearLayoutManager(this@HomePage)
+            layoutManager = LinearLayoutManager(this@HomeActivity)
             adapter = noteAdapter
         }
     }
@@ -136,9 +137,12 @@ class HomePage : AppCompatActivity() {
         sheetBinding.btnLogout.text = "Logout"
 
         sheetBinding.btnLogout.setOnClickListener {
-            dialog.dismiss()
+            val sharedPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+            sharedPref.edit().putBoolean("is_logged_in", false).apply()
+
             val intent = Intent(this, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            dialog.dismiss()
             startActivity(intent)
             finish()
         }
