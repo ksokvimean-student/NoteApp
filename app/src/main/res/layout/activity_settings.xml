@@ -54,7 +54,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/title_save_setting"
-                        android:textColor="#4CAF50"
+                        android:textColor="#673AB7"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
@@ -114,7 +114,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/title_delete_setting"
-                        android:textColor="#4CAF50"
+                        android:textColor="#673AB7"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 

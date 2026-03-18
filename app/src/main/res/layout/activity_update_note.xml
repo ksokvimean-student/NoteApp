@@ -53,7 +53,7 @@
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="Save Note"
                     android:src="@drawable/ic_edit"
-                    app:tint="#4CAF50" />
+                    app:tint="#673AB7" />
 
             </LinearLayout>
 
@@ -72,8 +72,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Title"
-            app:boxStrokeColor="#4CAF50"
-            app:hintTextColor="#4CAF50"
+            app:boxStrokeColor="#673AB7"
+            app:hintTextColor="#673AB7"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -94,8 +94,8 @@
             android:layout_height="0dp"
             android:layout_marginTop="16dp"
             android:hint="Content"
-            app:boxStrokeColor="#4CAF50"
-            app:hintTextColor="#4CAF50"
+            app:boxStrokeColor="#673AB7"
+            app:hintTextColor="#673AB7"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

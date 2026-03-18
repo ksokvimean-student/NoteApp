@@ -118,7 +118,7 @@
         android:layout_marginBottom="80dp"
         android:contentDescription="@string/btn_add_note"
         android:src="@android:drawable/ic_input_add"
-        app:backgroundTint="#4CAF50"
+        app:backgroundTint="#673AB7"
         app:tint="@android:color/white" />
 
     <include
